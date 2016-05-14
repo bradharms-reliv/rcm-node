@@ -6,7 +6,8 @@
 
 var app = require('../app');
 var debug = require('debug')('rcm-node:server');
-var http = require('http');
+var https= require('https');
+var fs = require('fs');
 
 /**
  * Get port from environment and store in Express.
@@ -19,7 +20,15 @@ app.set('port', port);
  * Create HTTP server.
  */
 
-var server = http.createServer(app);
+//var server = http.createServer(app);
+
+var server = https.createServer(
+    {
+        key: fs.readFileSync('bin/snakeoil_ssl_keys/server.key'),//@TODO get real keys on prod, make configurable
+        cert: fs.readFileSync('bin/snakeoil_ssl_keys/server.crt')
+    },
+    app
+);
 
 /**
  * Listen on provided port, on all network interfaces.

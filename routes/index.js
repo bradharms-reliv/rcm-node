@@ -17,5 +17,4 @@ conn.connect();
 /* GET home page. */
 router.get('/:pageName?', rcm(conn));
 
-
 module.exports = router;
