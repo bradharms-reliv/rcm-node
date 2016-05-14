@@ -17,8 +17,8 @@ module.exports = function (conn) {
                     'from rcm_pages ' +
                     'join rcm_sites on rcm_pages.siteId = rcm_sites.siteId ' +
                     'join rcm_domains on rcm_domains.domainId = rcm_sites.domainId ' +
-                    'where name = ? and rcm_domains.domain=?' +
-                    ' limit 1';
+                    'where name = ? and rcm_domains.domain = ? ' +
+                    'limit 1';
                 conn.query(sql, [pageData.pageName, pageData.domainName], cb);
             },
             function (res, cb) {
