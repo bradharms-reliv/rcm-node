@@ -118,18 +118,6 @@ function getContainerHtml(pageData, contName) {
     return html;
 }
 
-function getPluginInnerHtml(plugin, cb) {
-    //If we know how to render the plugin, do it. Otherwise get from API if its a PHP plugin
-    if (plugin.plugin == 'RcmHtmlArea') {
-        cb(JSON.parse(plugin.instanceConfig).html);
-    } else {
-        var url = 'https://base.reliv.com/rcm-admin-get-instance/' + plugin.plugin + '/' + plugin.instanceId;
-        request.get({url: url}, function (err, pluginRes) {
-            cb(pluginRes.body);
-        })
-    }
-}
-
 function getPluginHtml(plugin, cb) {
     if (plugin.displayName == null) {
         plugin.displayName = '';
@@ -153,4 +141,16 @@ function getPluginHtml(plugin, cb) {
     getPluginInnerHtml(plugin, function (innerHtml) {
         cb(preHtml + innerHtml + postHtml);
     });
+}
+
+function getPluginInnerHtml(plugin, cb) {
+    //If we know how to render the plugin, do it. Otherwise get from API if its a PHP plugin
+    if (plugin.plugin == 'RcmHtmlArea') {
+        cb(JSON.parse(plugin.instanceConfig).html);
+    } else {
+        var url = 'https://base.reliv.com/rcm-admin-get-instance/' + plugin.plugin + '/' + plugin.instanceId;
+        request.get({url: url}, function (err, pluginRes) {
+            cb(pluginRes.body);
+        })
+    }
 }
