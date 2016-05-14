@@ -119,6 +119,7 @@ module.exports = function (conn) {
             },
             function (_, cb) {
                 //@todo add title, desc, keywords
+                //@todo read site and page templates from db
                 httpRes.render('GuestResponsive/layout/guest-responsive-home-page', pageData);
             }
         ], function (err) {
