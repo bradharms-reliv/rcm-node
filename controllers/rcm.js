@@ -55,7 +55,6 @@ module.exports = function (conn) {
                 pageData.conts = {};
                 pageData.contInnerHtmls = {};
                 pageData.contRevisionIds = {};
-
                 var pluginsStillGettingHtml = 0;
 
                 res.forEach(function (plugin) {
@@ -82,12 +81,10 @@ module.exports = function (conn) {
                 pageData.contNames.forEach(function (contName) {
                     pageData.conts[contName] = getContainerHtml(pageData, contName);
                 });
-                cb();
-            },
-            function (_, cb) {
+
                 //@todo read title, desc, keywords in view
                 httpRes.render(pageData.theme + '/layout', pageData);
-            }
+            },
         ], function (err) {
             console.error(err, err.stack)
         });
