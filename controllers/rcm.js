@@ -105,9 +105,7 @@ function getContainerHtml(pageData, contName) {
     var html = '<div class="container-fluid rcmContainer"'
         + ' data-containerId="' + contName + '"'
         + ' data-containerRevision="' + pageData.contRevisionIds[contName] + '"';
-
     //@TODO if ($pageContainer) {html. = ' data-isPageContainer="Y"';}
-
     html += ' id="' + contName + '">';
 
     pageData.contInnerHtmls[contName].forEach(function (row) {
