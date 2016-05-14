@@ -92,7 +92,7 @@ module.exports = function (conn) {
                 cb();
             },
             function (_, cb) {
-                //@todo add title, desc, keywords
+                //@todo read title, desc, keywords in view
                 httpRes.render(pageData.theme + '/layout', pageData);
             }
         ], function (err) {
