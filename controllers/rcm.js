@@ -137,17 +137,12 @@ function getPluginHtml(plugin, cb) {
     var preHtml = '<div class="rcmPlugin ' + plugin.plugin + ' ' + plugin.displayName
         + ' ' + plugin.columnClass + '"'
         + ' data-rcmPluginName="' + plugin.plugin + '"'
-        + ' data-rcmPluginDefaultClass="rcmPlugin ' + plugin.plugin
-        + plugin.displayName + '"'
-        + ' data-rcmPluginColumnClass="' + plugin.columnClass
-        + '"'
-        + ' data-rcmPluginRowNumber="' + plugin.rowNumber
-        + '"'
-        + ' data-rcmPluginRenderOrderNumber="'
-        + plugin.renderOrder + '"'
+        + ' data-rcmPluginDefaultClass="rcmPlugin ' + plugin.plugin + plugin.displayName + '"'
+        + ' data-rcmPluginColumnClass="' + plugin.columnClass + '"'
+        + ' data-rcmPluginRowNumber="' + plugin.rowNumber + '"'
+        + ' data-rcmPluginRenderOrderNumber="' + plugin.renderOrder + '"'
         + ' data-rcmPluginInstanceId="' + plugin.instanceId + '"'
-        + ' data-rcmPluginWrapperId="' + plugin.pluginWrapperId
-        + '"'
+        + ' data-rcmPluginWrapperId="' + plugin.pluginWrapperId + '"'
         + ' data-rcmSiteWidePlugin="' + plugin.isSiteWide + '"'
         + ' data-rcmPluginDisplayName="' + plugin.displayName + '"'
         + '>';
