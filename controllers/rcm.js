@@ -26,13 +26,6 @@ module.exports = function (conn) {
 
                 var theme = require('../views/' + pageData.theme);
 
-                var escapedInStatement = '';
-                var comma = '';
-                theme.siteWideContainerNames.forEach(function (value) {
-                    escapedInStatement += comma + mysql.escape(value);
-                    comma = ',';
-                });
-
                 var sql = 'SELECT revisionId, layoutContainer, renderOrder, rowNumber, columnClass, plugin, instanceConfig,' +
                     'rcm_plugin_instances.pluginInstanceId as instanceId, displayName,' +
                     'rcm_plugin_wrappers.pluginWrapperId, siteWide as isSiteWide ' +
@@ -48,7 +41,7 @@ module.exports = function (conn) {
                     'join rcm_revisions_plugin_wrappers on rcm_revisions_plugin_wrappers.pluginWrapperId = rcm_plugin_wrappers.pluginWrapperId ' +
                     'join rcm_plugin_instances on rcm_plugin_instances.pluginInstanceId = rcm_plugin_wrappers.pluginInstanceId ' +
                     'join rcm_containers on rcm_containers.publishedRevisionId = rcm_revisions_plugin_wrappers.revisionId ' +
-                    'where rcm_containers.name in (' + escapedInStatement + ') ' +
+                    'where rcm_containers.name in ' + mySqlEscapeArray(theme.siteWideContainerNames) + ' ' +
                     'and rcm_containers.siteId = ? ' +
                     'order by layoutContainer asc, rowNumber asc, renderOrder asc;';
                 conn.query(
@@ -151,4 +144,14 @@ function getPluginInnerHtml(plugin, cb) {
             cb(pluginRes.body);
         })
     }
+}
+
+function mySqlEscapeArray(array) {
+    var escapedInStatement = '';
+    var comma = '';
+    array.forEach(function (value) {
+        escapedInStatement += comma + mysql.escape(value);
+        comma = ',';
+    });
+    return '(' + escapedInStatement + ')';
 }
