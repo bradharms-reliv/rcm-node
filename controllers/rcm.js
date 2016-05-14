@@ -7,13 +7,10 @@ function getPluginInnerHtml(plugin, cb) {
     if (plugin.plugin == 'RcmHtmlArea') {
         cb(JSON.parse(plugin.instanceConfig).html);
     } else {
-        request.get(
-            {
-                url: 'https://reliv.com/rcm-admin-get-instance/' + plugin.plugin + '/' + plugin.instanceId
-            },
-            function (err, pluginRes) {
-                cb(pluginRes.body);
-            })
+        var url = 'https://reliv.com/rcm-admin-get-instance/' + plugin.plugin + '/' + plugin.instanceId;
+        request.get({url: url}, function (err, pluginRes) {
+            cb(pluginRes.body);
+        })
     }
 }
 
