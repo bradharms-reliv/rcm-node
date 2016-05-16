@@ -1,6 +1,8 @@
 /**
- * This middle ware reads the shared RCM session that
+ * This middleware reads the shared RCM session that
  * came from PHP and injects it into req.session
+ *
+ * Try console.log(req.session);
  *
  * @param conn mysql connection
  * @returns {Function}
