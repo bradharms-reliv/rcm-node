@@ -23,7 +23,7 @@ module.exports = function (conn) {
 
             //Ignore session if it is expired.
             if (session.modified + session.lifetime > Math.floor(Date.now() / 1000)) {
-                req.session = session.json;
+                req.session = JSON.parse(session.json);
             }
 
             next();
