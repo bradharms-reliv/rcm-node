@@ -10,7 +10,8 @@ conn.connect();
 
 var rcmInstance = require('../controllers/rcm')(conn);
 var sharedSessionReader = require('../middleware/sharedSessionReader')(conn);
-
+router.use(sharedSessionReader);
+//the rest of our routes go here
 
 ////////////////////////
 

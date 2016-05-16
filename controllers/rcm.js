@@ -4,7 +4,6 @@ var request = require('request');
 
 module.exports = function (conn) {
     return function (httpReq, httpRes, next) {
-        console.log('session:', httpReq.session);
 
         var pageData = {
             pageName: httpReq.params.pageName ? httpReq.params.pageName : 'index',
