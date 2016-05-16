@@ -1,5 +1,3 @@
-var rcm = require('../controllers/rcm');
-
 var mysql = require('mysql');
 var conn = mysql.createConnection({
     host: 'localhost',
@@ -10,19 +8,18 @@ var conn = mysql.createConnection({
 
 conn.connect();
 
-var rcmInstance = rcm(conn);
-
+var rcmInstance = require('../controllers/rcm')(conn);
+var sharedSessionReader = require('../middleware/sharedSessionReader')(conn);
 
 
 ////////////////////////
 
 
-
-
 var express = require('express');
 var router = express.Router();
 
-/* GET home page. */
+router.use(sharedSessionReader);
+
 router.get('/:pageName?', rcmInstance);
 
 module.exports = router;
