@@ -21,8 +21,8 @@ module.exports = function (conn) {
                     'limit 1';
                 conn.query(sql, [pageData.pageName, pageData.domainName], cb);
             },
-            function (res, cb) {
-                pageData = res[0];
+            function (pages, cb) {
+                pageData = pages[0];
 
                 var theme = require('../views/' + pageData.theme);
 
@@ -50,14 +50,14 @@ module.exports = function (conn) {
                     cb
                 );
             },
-            function (res, cb) {
+            function (plugins, cb) {
                 pageData.contNames = [];
                 pageData.conts = {};
                 pageData.contInnerHtmls = {};
                 pageData.contRevisionIds = {};
                 var pluginsStillGettingHtml = 0;
 
-                res.forEach(function (plugin) {
+                plugins.forEach(function (plugin) {
                     if (pageData.contNames.indexOf(plugin.layoutContainer) == -1) {
                         pageData.contNames.push(plugin.layoutContainer);
                         pageData.contRevisionIds[plugin.layoutContainer] = plugin.revisionId;
@@ -77,14 +77,14 @@ module.exports = function (conn) {
                     });
                 });
             },
-            function (_, cb) {
+            function () {
                 pageData.contNames.forEach(function (contName) {
                     pageData.conts[contName] = getContainerHtml(pageData, contName);
                 });
 
                 //@todo read title, desc, keywords in view
                 httpRes.render(pageData.theme + '/layout', pageData);
-            },
+            }
         ], function (err) {
             console.error(err, err.stack)
         });
