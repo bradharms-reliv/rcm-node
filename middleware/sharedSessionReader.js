@@ -12,7 +12,7 @@ module.exports = function (conn) {
         var sessionName = 'reliv_session_id_local';//@todo dynamically get name depending on env
 
         var sql = 'select json, modified, lifetime from app_session where id = ? and name = ? limit 1';
-        var params = [req.cookies['reliv_session_id_local'], sessionName];
+        var params = [req.cookies[sessionName], sessionName];
         conn.query(sql, params, function (err, rows) {
             if (err) {
                 console.error(err);
