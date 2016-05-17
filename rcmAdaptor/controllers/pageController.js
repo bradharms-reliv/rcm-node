@@ -1,7 +1,7 @@
 var cps = require('cps');
 var mysql = require('mysql');
 var request = require('request');
-var conn = require('../dbConnections/mysql');
+var conn = require('../../dbConnections/mysql');
 
 
 module.exports = function (httpReq, httpRes, next) {
@@ -25,7 +25,7 @@ module.exports = function (httpReq, httpRes, next) {
         function (pages, cb) {
             pageData = pages[0];
 
-            var theme = require('../views/' + pageData.theme);
+            var theme = require('../../views/' + pageData.theme);
 
             var sql = 'SELECT revisionId, layoutContainer, renderOrder, rowNumber, columnClass, plugin, instanceConfig,' +
                 'rcm_plugin_instances.pluginInstanceId as instanceId, displayName,' +

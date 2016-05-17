@@ -1,4 +1,4 @@
-var conn = require('../dbConnections/mysql');
+var conn = require('../../dbConnections/mysql');
 var mysql = require('mysql');
 var cps = require('cps');
 

@@ -7,7 +7,7 @@
  * @param conn mysql connection
  * @returns {Function}
  */
-var conn = require('../dbConnections/mysql');
+var conn = require('../../dbConnections/mysql');
 
 module.exports = function (req, res, next) {
     var sessionName = 'reliv_session_id_local';//@todo dynamically get name depending on env

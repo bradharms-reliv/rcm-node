@@ -1,7 +1,7 @@
 var express = require('express');
 var isAllowed = require('../rcmAdaptor/acl/isAllowed');
 var sharedSessionReader = require('../rcmAdaptor/middleware/sharedSessionReader');
-var pageController = require('../controllers/rcm');
+var pageController = require('../rcmAdaptor/controllers/pageController');
 
 
 var router = express.Router();
