@@ -30,7 +30,8 @@ module.exports = function (req, resourceId, privilegeId, callback) {
         || !req.session.RcmUser.user.properties
         || !req.session.RcmUser.user.properties.RcmUserUserRoles
     ) {
-        return false;
+        callback(false, 'No role found in session');
+        return null;
     }
 
     if (req.session.RcmUser.user.properties.RcmUserUserRoles > 1) {
