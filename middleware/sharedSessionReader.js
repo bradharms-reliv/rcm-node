@@ -22,6 +22,11 @@ module.exports = function (req, res, next) {
 
         var session = rows[0];
 
+        if (!session) {
+            next();
+            return;
+        }
+
         //Ignore session if it is expired.
         if (session.modified + session.lifetime > Math.floor(Date.now() / 1000)) {
             req.session = JSON.parse(session.json);
