@@ -1,24 +1,17 @@
-var mysql = require('mysql');
-var conn = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '',
-    database: 'wespresslocal'
-});
-
-conn.connect();
-
-var rcmInstance = require('../controllers/rcm')(conn);
-var sharedSessionReader = require('../middleware/sharedSessionReader')(conn);
-
-////////////////////////
-
-
 var express = require('express');
 var router = express.Router();
+var rcmIsAllowed = require('../acl/rcmIsAllowed');
 
-router.use(sharedSessionReader);
+router.use(require('../middleware/sharedSessionReader'));
 
-router.get('/:pageName?', rcmInstance);
+router.get('/', function (req, res, next) {//@TODO remove this acl test
+    rcmIsAllowed(req, 'id-image', null, function (isAllowed, reason) {
+        console.log('isAllowed:', isAllowed, reason);
+    });
+    next();
+});
+
+router.get('/:pageName?', require('../controllers/rcm'));
+
 
 module.exports = router;

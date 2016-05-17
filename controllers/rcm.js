@@ -1,94 +1,94 @@
 var cps = require('cps');
 var mysql = require('mysql');
 var request = require('request');
+var conn = require('../dbConnections/mysql');
 
-module.exports = function (conn) {
-    return function (httpReq, httpRes, next) {
 
-        var pageData = {
-            pageName: httpReq.params.pageName ? httpReq.params.pageName : 'index',
-            domainName: httpReq.headers.host.split(':')[0]
-        };
+module.exports = function (httpReq, httpRes, next) {
 
-        cps.seq([
-            function (_, cb) {
-                var sql = 'select rcm_pages.publishedRevisionId, rcm_pages.pageTitle, rcm_pages.description, ' +
-                    'rcm_pages.keywords, rcm_sites.siteId, rcm_sites.theme ' +
-                    'from rcm_pages ' +
-                    'join rcm_sites on rcm_pages.siteId = rcm_sites.siteId ' +
-                    'join rcm_domains on rcm_domains.domainId = rcm_sites.domainId ' +
-                    'where name = ? and rcm_domains.domain = ? ' +
-                    'limit 1';
-                conn.query(sql, [pageData.pageName, pageData.domainName], cb);
-            },
-            function (pages, cb) {
-                pageData = pages[0];
+    var pageData = {
+        pageName: httpReq.params.pageName ? httpReq.params.pageName : 'index',
+        domainName: httpReq.headers.host.split(':')[0]
+    };
 
-                var theme = require('../views/' + pageData.theme);
+    cps.seq([
+        function (_, cb) {
+            var sql = 'select rcm_pages.publishedRevisionId, rcm_pages.pageTitle, rcm_pages.description, ' +
+                'rcm_pages.keywords, rcm_sites.siteId, rcm_sites.theme ' +
+                'from rcm_pages ' +
+                'join rcm_sites on rcm_pages.siteId = rcm_sites.siteId ' +
+                'join rcm_domains on rcm_domains.domainId = rcm_sites.domainId ' +
+                'where name = ? and rcm_domains.domain = ? ' +
+                'limit 1';
+            conn.query(sql, [pageData.pageName, pageData.domainName], cb);
+        },
+        function (pages, cb) {
+            pageData = pages[0];
 
-                var sql = 'SELECT revisionId, layoutContainer, renderOrder, rowNumber, columnClass, plugin, instanceConfig,' +
-                    'rcm_plugin_instances.pluginInstanceId as instanceId, displayName,' +
-                    'rcm_plugin_wrappers.pluginWrapperId, siteWide as isSiteWide ' +
-                    'FROM rcm_plugin_wrappers ' +
-                    'join rcm_revisions_plugin_wrappers on rcm_revisions_plugin_wrappers.pluginWrapperId = rcm_plugin_wrappers.pluginWrapperId ' +
-                    'join rcm_plugin_instances on rcm_plugin_instances.pluginInstanceId = rcm_plugin_wrappers.pluginInstanceId ' +
-                    'where revisionId = ? ' +
-                    "/***/ UNION /***/ " +
-                    'SELECT rcm_revisions_plugin_wrappers.revisionId, layoutContainer, renderOrder, rowNumber, columnClass, plugin, instanceConfig,' +
-                    'rcm_plugin_instances.pluginInstanceId as instanceId, displayName,' +
-                    'rcm_plugin_wrappers.pluginWrapperId, siteWide as isSiteWide ' +
-                    'FROM rcm_plugin_wrappers ' +
-                    'join rcm_revisions_plugin_wrappers on rcm_revisions_plugin_wrappers.pluginWrapperId = rcm_plugin_wrappers.pluginWrapperId ' +
-                    'join rcm_plugin_instances on rcm_plugin_instances.pluginInstanceId = rcm_plugin_wrappers.pluginInstanceId ' +
-                    'join rcm_containers on rcm_containers.publishedRevisionId = rcm_revisions_plugin_wrappers.revisionId ' +
-                    'where rcm_containers.name in ' + mySqlEscapeArray(theme.siteWideContainerNames) + ' ' +
-                    'and rcm_containers.siteId = ? ' +
-                    'order by layoutContainer asc, rowNumber asc, renderOrder asc;';
-                conn.query(
-                    sql,
-                    [pageData.publishedRevisionId, pageData.siteId],
-                    cb
-                );
-            },
-            function (plugins, cb) {
-                pageData.contNames = [];
-                pageData.conts = {};
-                pageData.contInnerHtmls = {};
-                pageData.contRevisionIds = {};
-                var pluginsStillGettingHtml = 0;
+            var theme = require('../views/' + pageData.theme);
 
-                plugins.forEach(function (plugin) {
-                    if (pageData.contNames.indexOf(plugin.layoutContainer) == -1) {
-                        pageData.contNames.push(plugin.layoutContainer);
-                        pageData.contRevisionIds[plugin.layoutContainer] = plugin.revisionId;
-                        pageData.contInnerHtmls[plugin.layoutContainer] = '';
-                        pageData.contInnerHtmls[plugin.layoutContainer] = [];
+            var sql = 'SELECT revisionId, layoutContainer, renderOrder, rowNumber, columnClass, plugin, instanceConfig,' +
+                'rcm_plugin_instances.pluginInstanceId as instanceId, displayName,' +
+                'rcm_plugin_wrappers.pluginWrapperId, siteWide as isSiteWide ' +
+                'FROM rcm_plugin_wrappers ' +
+                'join rcm_revisions_plugin_wrappers on rcm_revisions_plugin_wrappers.pluginWrapperId = rcm_plugin_wrappers.pluginWrapperId ' +
+                'join rcm_plugin_instances on rcm_plugin_instances.pluginInstanceId = rcm_plugin_wrappers.pluginInstanceId ' +
+                'where revisionId = ? ' +
+                "/***/ UNION /***/ " +
+                'SELECT rcm_revisions_plugin_wrappers.revisionId, layoutContainer, renderOrder, rowNumber, columnClass, plugin, instanceConfig,' +
+                'rcm_plugin_instances.pluginInstanceId as instanceId, displayName,' +
+                'rcm_plugin_wrappers.pluginWrapperId, siteWide as isSiteWide ' +
+                'FROM rcm_plugin_wrappers ' +
+                'join rcm_revisions_plugin_wrappers on rcm_revisions_plugin_wrappers.pluginWrapperId = rcm_plugin_wrappers.pluginWrapperId ' +
+                'join rcm_plugin_instances on rcm_plugin_instances.pluginInstanceId = rcm_plugin_wrappers.pluginInstanceId ' +
+                'join rcm_containers on rcm_containers.publishedRevisionId = rcm_revisions_plugin_wrappers.revisionId ' +
+                'where rcm_containers.name in ' + mySqlEscapeArray(theme.siteWideContainerNames) + ' ' +
+                'and rcm_containers.siteId = ? ' +
+                'order by layoutContainer asc, rowNumber asc, renderOrder asc;';
+            conn.query(
+                sql,
+                [pageData.publishedRevisionId, pageData.siteId],
+                cb
+            );
+        },
+        function (plugins, cb) {
+            pageData.contNames = [];
+            pageData.conts = {};
+            pageData.contInnerHtmls = {};
+            pageData.contRevisionIds = {};
+            var pluginsStillGettingHtml = 0;
+
+            plugins.forEach(function (plugin) {
+                if (pageData.contNames.indexOf(plugin.layoutContainer) == -1) {
+                    pageData.contNames.push(plugin.layoutContainer);
+                    pageData.contRevisionIds[plugin.layoutContainer] = plugin.revisionId;
+                    pageData.contInnerHtmls[plugin.layoutContainer] = '';
+                    pageData.contInnerHtmls[plugin.layoutContainer] = [];
+                }
+                pluginsStillGettingHtml++;
+                getPluginHtml(plugin, function (html) {
+                    if (pageData.contInnerHtmls[plugin.layoutContainer][plugin.rowNumber] == undefined) {
+                        pageData.contInnerHtmls[plugin.layoutContainer][plugin.rowNumber] = [];
                     }
-                    pluginsStillGettingHtml++;
-                    getPluginHtml(plugin, function (html) {
-                        if (pageData.contInnerHtmls[plugin.layoutContainer][plugin.rowNumber] == undefined) {
-                            pageData.contInnerHtmls[plugin.layoutContainer][plugin.rowNumber] = [];
-                        }
-                        pageData.contInnerHtmls[plugin.layoutContainer][plugin.rowNumber][plugin.renderOrder] = html;
-                        pluginsStillGettingHtml--;
-                        if (pluginsStillGettingHtml == 0) {
-                            cb()
-                        }
-                    });
+                    pageData.contInnerHtmls[plugin.layoutContainer][plugin.rowNumber][plugin.renderOrder] = html;
+                    pluginsStillGettingHtml--;
+                    if (pluginsStillGettingHtml == 0) {
+                        cb()
+                    }
                 });
-            },
-            function () {
-                pageData.contNames.forEach(function (contName) {
-                    pageData.conts[contName] = getContainerHtml(pageData, contName);
-                });
+            });
+        },
+        function () {
+            pageData.contNames.forEach(function (contName) {
+                pageData.conts[contName] = getContainerHtml(pageData, contName);
+            });
 
-                //@todo read title, desc, keywords in view
-                httpRes.render(pageData.theme + '/layout', pageData);
-            }
-        ], function (err) {
-            console.error(err, err.stack)
-        });
-    }
+            //@todo read title, desc, keywords in view
+            httpRes.render(pageData.theme + '/layout', pageData);
+        }
+    ], function (err) {
+        console.error(err, err.stack)
+    });
 };
 
 function getContainerHtml(pageData, contName) {
