@@ -34,7 +34,7 @@ module.exports = function (req, resourceId, privilegeId, callback) {
         return null;
     }
 
-    if (req.session.RcmUser.user.properties.RcmUserUserRoles > 1) {
+    if (req.session.RcmUser.user.properties.RcmUserUserRoles.length > 1) {
         throw new Error('Multiple roles are not supported.');
     }
 
