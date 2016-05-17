@@ -2,7 +2,7 @@ var cps = require('cps');
 var mysql = require('mysql');
 var request = require('request');
 var conn = require('../../dbConnections/mysql');
-
+var mySqlEscapeArray = require('mysql-escape-array');
 
 module.exports = function (httpReq, httpRes, next) {
 
@@ -141,14 +141,4 @@ function getPluginInnerHtml(plugin, cb) {
             cb(pluginRes.body);
         })
     }
-}
-
-function mySqlEscapeArray(array) {
-    var escapedInStatement = '';
-    var comma = '';
-    array.forEach(function (value) {
-        escapedInStatement += comma + mysql.escape(value);
-        comma = ',';
-    });
-    return '(' + escapedInStatement + ')';
 }

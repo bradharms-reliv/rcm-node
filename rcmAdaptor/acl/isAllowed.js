@@ -1,6 +1,7 @@
 var conn = require('../../dbConnections/mysql');
 var mysql = require('mysql');
 var cps = require('cps');
+var mySqlEscapeArray = require('mysql-escape-array');
 
 /**
  * @callback isAllowedCallback
@@ -167,13 +168,3 @@ module.exports = function (req, resourceId, privilegeId, callback) {
     )
     ;
 };
-
-function mySqlEscapeArray(array) {
-    var escapedInStatement = '';
-    var comma = '';
-    array.forEach(function (value) {
-        escapedInStatement += comma + mysql.escape(value);
-        comma = ',';
-    });
-    return '(' + escapedInStatement + ')';
-}
