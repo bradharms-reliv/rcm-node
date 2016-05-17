@@ -74,7 +74,7 @@ module.exports = function (req, resourceId, privilegeId, callback) {
          function (allDbRoles, cb) {
             var currentRoleInLoop = role;
             var done = false;
-            while (!done) { //Web storm doesn't like while(true);
+            while (!done) {
                 for (var roleI = 0, roleLen = allDbRoles.length; roleI < roleLen; roleI++) {
                     var dbRole = allDbRoles[roleI];
                     if (dbRole.roleId == currentRoleInLoop) {
