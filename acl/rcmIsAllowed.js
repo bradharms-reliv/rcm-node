@@ -40,6 +40,12 @@ module.exports = function (req, resourceId, privilegeId, callback) {
 
     var role = req.session.RcmUser.user.properties.RcmUserUserRoles[0];
 
+    /**
+     * This object will be used to pass data around during the following
+     * sequence of functions.
+     *
+     * @type {{currentRequestRoleAndParents: Array, relevantRules: Array}}
+     */
     var requestAclData = {
         currentRequestRoleAndParents: [],
         relevantRules: []
