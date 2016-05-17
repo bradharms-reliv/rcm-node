@@ -104,23 +104,15 @@ module.exports = function (req, resourceId, privilegeId, callback) {
             conn.query(sql, params, cb);
         },
         /**
-         * Store the relevant rules for further use
+         * Go through the relevant rules, determine if "isAllowed", and call the main callback
+         * with the result
          *
          * @param relevantRules
          * @param cb
          */
         function (relevantRules, cb) {
             requestAclData.relevantRules = relevantRules;
-            cb();
-        },
-        /**
-         * Go through the relevant rules, determine if "isAllowed", and call the main callback
-         * with the result
-         *
-         * @param _
-         * @param cb
-         */
-        function (_, cb) {
+
             //@TODO this is the general area to add resource inheritance support
             var foundAnswerAndCalledMainCallback = false;
             for (var roleI = 0, roleLen = requestAclData.currentRequestRoleAndParents.length; roleI < roleLen; roleI++) {
