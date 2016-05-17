@@ -146,13 +146,13 @@ module.exports = function (req, resourceId, privilegeId, callback) {
                 }
 
                 if (allowed && !denied) {
-                    callback(true, 'Rule found');
+                    callback(true, 'Allow rule found');
                     foundAnswerAndCalledMainCallback = true;
                     break;
                 }
 
                 if (denied) {
-                    callback(false, 'Rule found');
+                    callback(false, 'Deny rule found');
                     foundAnswerAndCalledMainCallback = true;
                     break;
                 }
