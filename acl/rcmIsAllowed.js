@@ -171,6 +171,7 @@ module.exports = function (req, resourceId, privilegeId, callback) {
         }
         ], function (err) {
             //This is the error handler for cps.seq()
+            callback(false, 'ACL error');
             console.error(err, err.stack)
         }
     )
