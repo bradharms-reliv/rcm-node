@@ -11,7 +11,9 @@ var cps = require('cps');
 /**
  * Calls the given callback with a boolean that represents
  * whether or not the user the current request is for
- * has access to the given resourceId and privilageId.
+ * has access to the given resourceId and privilageId. A
+ * "reason" string is also given to the callback.
+ *
  *
  * @TODO support resource inheritance
  * @TODO support super admin if we decide to (not currently implemented)
